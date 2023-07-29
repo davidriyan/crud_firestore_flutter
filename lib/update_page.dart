@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UpdatePage extends StatefulWidget {
   final DocumentSnapshot documentSnapshot;
+
   const UpdatePage({super.key, required this.documentSnapshot});
 
   @override
@@ -55,21 +56,34 @@ class _UpdatePageState extends State<UpdatePage> {
             ),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: () async {
-                final String nama = namaController.text;
-                final int? harga = int.tryParse(hargaController.text);
-                if (nama.isNotEmpty && harga != null) {
-                  await product
-                      .doc(widget.documentSnapshot.id)
-                      .update({'nama': nama, 'harga': harga});
-                }
-                namaController.text = '';
-                hargaController.text = '';
-                // ignore: use_build_context_synchronously
-                Navigator.pop(context);
-              },
-              child: const Text('Update'))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //membuat tombol update
+              ElevatedButton(
+                  onPressed: () async {
+                    final String nama = namaController.text;
+                    final int? harga = int.tryParse(hargaController.text);
+                    if (nama.isNotEmpty && harga != null) {
+                      await product
+                          .doc(widget.documentSnapshot.id)
+                          .update({'nama': nama, 'harga': harga});
+                    }
+                    namaController.text = '';
+                    hargaController.text = '';
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Update')),
+              //membuat tombol delete
+              ElevatedButton(
+                  onPressed: () {
+                    product.doc(widget.documentSnapshot.id).delete();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Delete'))
+            ],
+          )
         ],
       ),
     );
